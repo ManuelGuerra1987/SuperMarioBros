@@ -141,8 +141,9 @@ class Mushroom(pygame.sprite.Sprite):
         self.constrain_movement()                        
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, screen_width, screen_height, powerup: bool):
+    def __init__(self, game, screen_width, screen_height, powerup: bool):
         super().__init__()
+        self.game = game
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.gravity = 0
@@ -180,9 +181,26 @@ class Player(pygame.sprite.Sprite):
     def movement(self):
         if self.move_left: 
             self.rect.x -= self.speed 
+            #pipe horizontal collision:
+            if pygame.sprite.spritecollide(self.game.player_group.sprite, self.game.pipe_group, False):
+                self.rect.x += self.speed
+            #block horizontal collision:    
+            if pygame.sprite.spritecollide(self.game.player_group.sprite, self.game.block_group, False):
+                self.rect.x += self.speed
+            #brick horizontal collision:    
+            if pygame.sprite.spritecollide(self.game.player_group.sprite, self.game.bricks_group, False):
+                self.rect.x += self.speed    
                             
         if self.move_right: 
-            self.rect.x += self.speed         
+            self.rect.x += self.speed  
+            #pipe horizontal collision:
+            if pygame.sprite.spritecollide(self.game.player_group.sprite, self.game.pipe_group, False):
+                self.rect.x -= self.speed
+            #block horizontal collision:    
+            if pygame.sprite.spritecollide(self.game.player_group.sprite, self.game.block_group, False):
+                self.rect.x -= self.speed    
+            if pygame.sprite.spritecollide(self.game.player_group.sprite, self.game.bricks_group, False):
+                self.rect.x -= self.speed         
 
     def animation(self):
 

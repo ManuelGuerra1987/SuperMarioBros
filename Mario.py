@@ -5,10 +5,10 @@ from resources import *
 
 
 class Game:
-    pygame.init() 
-    pygame.display.set_caption("Mario")
-
+    
     def __init__(self, screen_width, screen_height):
+        pygame.init() 
+        pygame.display.set_caption("Mario")
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
         self.screen_width = screen_width 
@@ -48,7 +48,7 @@ class Game:
         self.mushroom_group.empty()
         self.goomba_group.empty()
         self.flag_group.empty()
-        self.player_group.add(Player(self.screen_width, self.screen_height, self.mariopowerup)) 
+        self.player_group.add(Player(self, self.screen_width, self.screen_height, self.mariopowerup)) 
        
         for row in range(ROWS):
             for column in range(COLS):
@@ -143,42 +143,14 @@ class Game:
                         self.player_group.sprite.gravity = 0
                         break
 
-    def horizontal_collisions(self):
-        if game.player_group.sprite.move_left: 
-            if pygame.sprite.spritecollide(game.player_group.sprite, game.pipe_group, False):
-                pipe_temp = pygame.sprite.spritecollide(game.player_group.sprite, game.pipe_group, False)[0]
-                if game.player_group.sprite.rect.bottom >= pipe_temp.rect.bottom:
-                    game.player_group.sprite.rect.x += game.player_group.sprite.speed   
-            if pygame.sprite.spritecollide(game.player_group.sprite, game.block_group, False):
-                block_temp = pygame.sprite.spritecollide(game.player_group.sprite, game.block_group, False)[0]
-                if game.player_group.sprite.rect.bottom >= block_temp.rect.bottom:
-                    game.player_group.sprite.rect.x += game.player_group.sprite.speed 
-            if pygame.sprite.spritecollide(game.player_group.sprite, game.bricks_group, False):
-                brick_temp = pygame.sprite.spritecollide(game.player_group.sprite, game.bricks_group, False)[0]
-                if game.player_group.sprite.rect.bottom >= brick_temp.rect.bottom:
-                    game.player_group.sprite.rect.x += game.player_group.sprite.speed                            
-
-        if game.player_group.sprite.move_right: 
-            if pygame.sprite.spritecollide(game.player_group.sprite, game.pipe_group, False):
-                pipe_temp = pygame.sprite.spritecollide(game.player_group.sprite, game.pipe_group, False)[0]
-                if game.player_group.sprite.rect.bottom >= pipe_temp.rect.bottom:
-                    game.player_group.sprite.rect.x -= game.player_group.sprite.speed   
-            if pygame.sprite.spritecollide(game.player_group.sprite, game.block_group, False):
-                block_temp = pygame.sprite.spritecollide(game.player_group.sprite, game.block_group, False)[0]
-                if game.player_group.sprite.rect.bottom >= block_temp.rect.bottom:
-                    game.player_group.sprite.rect.x -= game.player_group.sprite.speed  
-            if pygame.sprite.spritecollide(game.player_group.sprite, game.bricks_group, False):
-                brick_temp = pygame.sprite.spritecollide(game.player_group.sprite, game.bricks_group, False)[0]
-                if game.player_group.sprite.rect.bottom >= brick_temp.rect.bottom:
-                    game.player_group.sprite.rect.x -= game.player_group.sprite.speed                                  
-        
+                           
     def coin_collision(self):
         coin_temp = pygame.sprite.spritecollide(self.player_group.sprite, self.coin_group, True)
         if coin_temp:
             self.sounds.coin.play()
 
     def mario_is_in_ground(self):   
-        if game.player_group.sprite.gravity == 0:
+        if self.player_group.sprite.gravity == 0:
             return True
         else:
             return False        
@@ -304,7 +276,6 @@ class Game:
         self.question_special_group.update()   
 
     def collisions_check(self):
-        self.horizontal_collisions()
         self.gravity()   
         self.bottom_to_top_collision()  
         self.top_to_bottom_collisions()    
