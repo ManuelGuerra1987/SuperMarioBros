@@ -2,6 +2,7 @@ import pygame, sys
 from game_map import *
 from settings import *
 from resources import *
+from player import *
 
 
 class Game:
@@ -314,38 +315,39 @@ class Game:
         self.flag_group.draw(game.screen)  
         self.brick_animation()  
                                
+    def run(self):
+
+        while True:
+            for event in pygame.event.get():       
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()  
+                if event.type == pygame.KEYDOWN:                        
+                        if event.key == pygame.K_SPACE:
+                            self.player_group.sprite.jump()          
+                        if event.key == pygame.K_RIGHT:
+                            self.player_group.sprite.move_right = True
+                        if event.key == pygame.K_LEFT:
+                            self.player_group.sprite.move_left = True         
+                if event.type == pygame.KEYUP: 
+                        if event.key == pygame.K_RIGHT:
+                            self.player_group.sprite.move_right = False 
+                        if event.key == pygame.K_LEFT:
+                            self.player_group.sprite.move_left = False    
+                                    
+            if not self.game_over:
+                self.update()
+                self.collisions_check()
+                self.draw()   
+
+            pygame.display.update()
+            self.clock.tick(60)
+
 
 
 
 game = Game(SCREEN_WIDTH,SCREEN_HEIGHT)
+game.run()
 
-while True:
 
-    for event in pygame.event.get():       
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()  
-
-        if event.type == pygame.KEYDOWN:
-                        
-                if event.key == pygame.K_SPACE:
-                    game.player_group.sprite.jump()          
-                if event.key == pygame.K_RIGHT:
-                    game.player_group.sprite.move_right = True
-                if event.key == pygame.K_LEFT:
-                    game.player_group.sprite.move_left = True
-              
-        if event.type == pygame.KEYUP: 
-                if event.key == pygame.K_RIGHT:
-                    game.player_group.sprite.move_right = False 
-                if event.key == pygame.K_LEFT:
-                    game.player_group.sprite.move_left = False    
-                               
-    if not game.game_over:
-        game.update()
-        game.collisions_check()
-        game.draw()   
-
-    pygame.display.update()
-    game.clock.tick(60)
 
